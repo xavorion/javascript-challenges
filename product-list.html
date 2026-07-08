@@ -6,7 +6,9 @@
     <title>Product List app</title>
   </head>
   <body>
+    <label for="inputName">Name of Product</label>
     <input id="inputName" type="text" />
+    <label for="inputPrice">Product Price</label>
     <input id="inputPrice" type="text" />
     <button id="addBtn">Add Product</button>
     <table>
@@ -19,13 +21,7 @@
         </tr>
       </thead>
       <!-- body -->
-      <tbody id="showData">
-        <tr>
-          <td>Sample</td>
-          <td>Sample</td>
-          <td>Sample</td>
-        </tr>
-      </tbody>
+      <tbody id="showData"></tbody>
     </table>
     <!-- Show Total Price -->
     <p id="showPrice">Total Price:</p>
@@ -40,11 +36,15 @@
       const showData = document.getElementById("showData");
       const showPrice = document.getElementById("showPrice");
 
+      // Store the all products
+      const products = [];
+
       addBtn.addEventListener("click", addProduct);
 
       function addProduct() {
         const productName = inputName.value;
-        const productPrice = inputPrice.value;
+        const productPrice = Number(inputPrice.value);
+        const productStatus = productPrice > 1000 ? "Expensive" : "Affordable";
 
         if (productName === "" || isNaN(productPrice))
           return alert("Please input the name of product and price.");
@@ -55,19 +55,34 @@
         const dataPrice = document.createElement("td");
         const dataStatus = document.createElement("td");
 
-        dataName.textContent = inputName.value;
-        dataPrice.textContent = Number(inputPrice.value);
+        dataName.textContent = productName;
+        dataPrice.textContent = productPrice;
+        dataStatus.textContent = productStatus;
 
         tr.appendChild(dataName);
         tr.appendChild(dataPrice);
+        tr.appendChild(dataStatus);
 
         showData.appendChild(tr);
+        // store to products
+        products.push({
+          name: productName,
+          price: productPrice,
+        });
 
-        showPrice.appendChild(dataPrice);
+        load();
+      }
 
+      function load() {
         inputName.value = "";
         inputPrice.value = "";
+
+        const total = products.reduce((sum, { price }) => sum + price, 0);
+
+        showPrice.textContent = `Total Price: ${total}`;
       }
+
+      load();
     </script>
   </body>
 </html>
