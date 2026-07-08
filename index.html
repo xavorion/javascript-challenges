@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOM + Local Storage</title>
+</head>
+<body>
+
+  <input id="inputNote" type="text">
+  <button id="saveNote">Save Note</button>
+  <p id="showNote"></p>
+
+  <script>
+
+    const inputNote = document.getElementById('inputNote');
+    const saveNote = document.getElementById('saveNote');
+    const showNote = document.getElementById('showNote');
+
+    const notes = localStorage.getItem('notes') || '';
+
+    saveNote.addEventListener('click', () => {
+
+      showNote.textContent = inputNote.value;
+
+      saveLocal();
+      inputNote.value = '';
+    });
+
+    function saveLocal() {
+      localStorage.setItem('notes',inputNote.value);
+    }
+
+    function load() {
+      return showNote.textContent = notes;
+    }
+
+    load();
+
+
+
+
+  </script>
+</body>
+</html>
