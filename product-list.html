@@ -58,10 +58,6 @@
 
         const productPrice = Number(priceText);
 
-        if (productName === "" || isNaN(productPrice)) {
-          return alert("Please input the product name and price.");
-        }
-
         // Updating Existing Product
         if (editingProduct) {
           editingProduct.name = inputName.value;
