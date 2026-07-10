@@ -41,17 +41,41 @@
 
       // Store all products
       const products = [];
+      let editingProduct = null;
+      let editingRow = null;
 
       addBtn.addEventListener("click", addProduct);
 
       function addProduct() {
         const productName = inputName.value.trim();
-        const productPrice = Number(inputPrice.value);
+
+        const priceText = inputPrice.value.trim();
+
+        if (productName === "" || priceText === "" || isNaN(priceText)) {
+          alert("Please input the product name and price.");
+          return;
+        }
+
+        const productPrice = Number(priceText);
 
         if (productName === "" || isNaN(productPrice)) {
           return alert("Please input the product name and price.");
         }
 
+        // Updating Existing Product
+        if (editingProduct) {
+          editingProduct.name = inputName.value;
+          editingProduct.price = Number(inputPrice.value);
+          editingRow.dataName.textContent = editingProduct.name;
+          editingRow.dataPrice.textContent = editingProduct.price;
+          editingRow.dataStatus.textContent = editingProduct.price > 1000 ? 'Expensive' : 'Affordable';
+          editingProduct = null;
+          editingRow = null;
+          addBtn.textContent = 'Add Product';
+          load();
+          return;
+        }
+        // Add Product
         const product = {
           name: productName,
           price: productPrice,
@@ -71,6 +95,8 @@
 
         const deleteBtn = createDeleteButton(tr, product);
         dataAction.appendChild(deleteBtn);
+        const editBtn = createEditButton(tr, product, dataName, dataPrice, dataStatus);
+        dataAction.appendChild(editBtn);
 
         tr.appendChild(dataName);
         tr.appendChild(dataPrice);
@@ -82,8 +108,10 @@
         products.push(product);
 
         load();
+        
       }
 
+      // delete button
       function createDeleteButton(tr, product) {
         const btnDelete = document.createElement("button");
         btnDelete.textContent = "Delete";
@@ -101,7 +129,28 @@
 
         return btnDelete;
       }
+      // Edit button
+      function createEditButton(tr, product, dataName, dataPrice, dataStatus) {
+        const btnEdit = document.createElement('button');
+        btnEdit.textContent = 'Edit';
 
+        btnEdit.addEventListener('click', () => {
+          // Put in the input box
+          inputName.value = product.name;
+          inputPrice.value = product.price;
+
+          // Track edit
+          editingProduct = product;
+          editingRow = {tr, dataName, dataPrice, dataStatus};
+
+          addBtn.textContent = 'Update';
+
+        })
+        return btnEdit;
+      }
+
+
+      // Render page when load
       function load() {
         inputName.value = "";
         inputPrice.value = "";
